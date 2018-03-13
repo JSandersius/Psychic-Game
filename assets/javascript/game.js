@@ -1,42 +1,69 @@
 // Computer Randomly Picks a letter, user has to guess it.
 // Need variables for wins, losses, chances left, computer choice, choices
 
-var win = 0;
-var loss = 0;
-var guessesLeft = 10;
-var guessTotal = "";
+// "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-// creating an array with alphabet
-var computerChoices = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-//runs at a key press 
+var guessedLetters = [];
+
+var letterToGuess = null;
+
+var guessesLeft = 9;
+
+var wins = 0;
+var losses = 0;
+
+var updateGuessesLeft = function() {
+    document.querySelector("#guessesLeft").innerHTML = guessesLeft;
+};
+
+var updateLetterToGuess = function() {
+    letterToGuess = letters[Math.floor(Math.random() * letters.length)];
+};
+
+var updateGuessesSoFar = function() {
+    document.querySelector("#guessesSoFar").innerHTML = guessedLetters.join(", ");
+};
+
+var reset = function() {
+    guessesLeft = 9;
+    guessedLetters = []
+    updateLetterToGuess();
+    updateGuessesLeft();
+    updateGuessesSoFar();
+
+};
+
+console.log("checking")
+
+updateLetterToGuess();
+updateGuessesSoFar();
+
 document.onkeyup = function(event) {
+    guessesLeft--;
 
-    //computers guess, randomly chooses a number
-    var computerGuess = computerChoices.charAt(Math.floor(Math.random() * compututerChoices.length));
-    console.log(computerGuess);
+    var letter = String.fromCharCode(event.keyCode).toLowerCase();
 
-    //Determines which key was pressed. 
-    var userGuess = event.key;
-    totalGuess = totalGuess + "\'" + userGuess + "\'  ";
-    document.getElementById('lbl4').innerHTML = totalGuess;
+    guessedLetters.push(letter);
 
+    updateGuessesLeft();
+    updateGuessesSoFar();
 
-    if (userGuess === computerGuess) {
-        win++;
-        document.getElementById('lbl1').innerHTML = win;
-        totalGuess = "";
-        document.getElementById('lbl3').innerHTML = guessesLeft;
-    } else {
-        guessesLeft--;
-        document.getElementById('lbl3').innerHTML = guessesLeft;
+    if (letter === letterToGuess) {
 
-        if (guessesLeft === 0) {
+        wins++;
+        document.querySelector("#win").innerHTML = wins;
 
-            loss++;
-            document.getElementById('lbl2').innerHTML = loss;
-            totalGuess = "";
-            guessesLeft = 10;
-        }
+        reset();
     }
+
+    if (guessesLeft === 0) {
+
+        losses++;
+        document.querySelector("#loss").innerHTML = losses;
+
+        reset();
+    }
+
 };
